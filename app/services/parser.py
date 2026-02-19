@@ -7,6 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.crud.vacancy import upsert_external_vacancies
 from app.schemas.external import ExternalVacanciesResponse
+from app.schemas.vacancy import VacancyBase
+
 
 logger = logging.getLogger(__name__)
 
@@ -32,20 +34,18 @@ async def parse_and_store(session: AsyncSession) -> int:
         page = 1
         while True:
             payload = await fetch_page(client, page)
-            parsed_payloads = []
+            parsed_payloads: List[dict] = []
             for item in payload.items:
-                parsed_payloads.append(
-                    {
-                        "external_id": item.id,
-                        "title": item.title,
-                        "timetable_mode_name": item.timetable_mode.name,
-                        "tag_name": item.tag.name,
-                        "city_name": item.city.name.strip(),
-                        "published_at": item.published_at,
-                        "is_remote_available": item.is_remote_available,
-                        "is_hot": item.is_hot,
-                    }
-                )
+                parsed_payloads.append(VacancyBase(
+                    external_id=item.id,
+                    title=item.title,
+                    timetable_mode_name=item.timetable_mode.name,
+                    tag_name=item.tag.name,
+                    city_name=item.city.name.strip() if item.city is not None else None,
+                    published_at=item.published_at,
+                    is_remote_available=item.is_remote_available,
+                    is_hot=item.is_hot,
+                ).model_dump())
 
             created_count = await upsert_external_vacancies(session, parsed_payloads)
             created_total += created_count
