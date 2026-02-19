@@ -27,3 +27,7 @@ venv/
 
 .idea/
 .vscode/
+
+#debug
+*.bat
+.venv
