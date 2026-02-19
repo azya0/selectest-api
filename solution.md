@@ -23,3 +23,10 @@ Added ```container_name: db```
 ### 13 line of app.services.scheduler.py:
 
 ```seconds=settings.parse_schedule_minutes, -> seconds=settings.parse_schedule_minutes * 60,```
+
+## Wrong post method statuscode on error handling
+
+### 53 line of app.api.v1.vacancies.py:
+
+```status_code=status.HTTP_200_OK, -> status_code=status.HTTP_409_CONFLICT,```
+
