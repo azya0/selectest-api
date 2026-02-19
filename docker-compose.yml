@@ -18,13 +18,22 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
-    build: .
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile.migration
     env_file:
       - .env
     depends_on:
       db:
         condition: service_healthy
+
+  app:
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - migration
     ports:
       - "8000:8000"
     command: >
