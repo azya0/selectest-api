@@ -17,3 +17,9 @@
 ### 5 line of docker-compose.yml
 
 Added ```container_name: db```
+
+## Wrong parser call time
+
+### 13 line of app.services.scheduler.py:
+
+```seconds=settings.parse_schedule_minutes, -> seconds=settings.parse_schedule_minutes * 60,```
