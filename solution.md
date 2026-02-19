@@ -11,3 +11,9 @@
 ### 44 line of app.services.parser.py:
 
 ```city_name=item.city.name.strip() -> city_name=item.city.name.strip() if item.city is not None else None```
+
+## Miss db container_name
+
+### 5 line of docker-compose.yml
+
+Added ```container_name: db```
