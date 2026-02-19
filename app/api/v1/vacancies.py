@@ -53,13 +53,23 @@ async def create_vacancy_endpoint(
     return await create_vacancy(session, payload)
 
 
-@router.put("/{vacancy_id}", response_model=VacancyRead)
+@router.patch("/{vacancy_id}", response_model=VacancyRead)
 async def update_vacancy_endpoint(
     vacancy_id: int,
     payload: VacancyUpdate,
     session: AsyncSession = Depends(get_session),
 ) -> VacancyRead:
+    if not payload.model_fields_set:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty update data")
+
     vacancy = await get_vacancy(session, vacancy_id)
+
+    if payload.external_id is not None:
+        vacancy_by_external_id = await get_vacancy_by_external_id(session, payload.external_id)
+
+        if vacancy_by_external_id is not None and vacancy_by_external_id.id != vacancy.id:
+            raise HTTPException(status.HTTP_409_CONFLICT, detail="Vacancy with external_id already exists")
+    
     if not vacancy:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     return await update_vacancy(session, vacancy, payload)

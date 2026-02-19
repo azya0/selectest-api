@@ -30,3 +30,22 @@ Added ```container_name: db```
 
 ```status_code=status.HTTP_200_OK, -> status_code=status.HTTP_409_CONFLICT,```
 
+## Wrong REST method is used for update_vacancy_endpoint
+
+### 56 line of app.api.v1.vacancies.py:
+
+```@router.put -> @router.patch```
+
+## Fix update rest method for external_id
+
+### 67-71 line of app.api.v1.vacancies.py:
+
+Added 
+
+```
+if payload.external_id is not None:
+    vacancy_by_external_id = await get_vacancy_by_external_id(session, payload.external_id)
+
+    if vacancy_by_external_id is not None and vacancy_by_external_id.id != vacancy.id:
+        raise HTTPException(status.HTTP_409_CONFLICT, detail="Vacancy with external_id already exists")
+```
