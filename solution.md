@@ -12,12 +12,6 @@
 
 ```city_name=item.city.name.strip() -> city_name=item.city.name.strip() if item.city is not None else None```
 
-## Miss db container_name
-
-### 5 line of docker-compose.yml
-
-Added ```container_name: db```
-
 ## Wrong parser call time
 
 ### 13 line of app.services.scheduler.py:
