@@ -1,7 +1,6 @@
-from typing import List, Optional
+from typing import AsyncGenerator, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud.vacancy import (
@@ -18,7 +17,7 @@ from app.schemas.vacancy import VacancyCreate, VacancyRead, VacancyUpdate
 router = APIRouter(prefix="/vacancies", tags=["vacancies"])
 
 
-async def get_session() -> AsyncSession:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
 

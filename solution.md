@@ -30,7 +30,7 @@
 
 ```@router.put -> @router.patch```
 
-## Fix update rest method for external_id
+## Fix "update" rest method for external_id (???)
 
 ### 67-71 line of app.api.v1.vacancies.py:
 
@@ -42,4 +42,22 @@ if payload.external_id is not None:
 
     if vacancy_by_external_id is not None and vacancy_by_external_id.id != vacancy.id:
         raise HTTPException(status.HTTP_409_CONFLICT, detail="Vacancy with external_id already exists")
+```
+
+## Fix wrong function typehint (???):
+
+```
+async def get_session() -> AsyncSession:
+    async with async_session_maker() as session:
+        yield session
+```
+
+This function isn't returning AsyncSession. It's AsyncGenerator
+
+Changed to:
+
+```
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session_maker() as session:
+        yield session
 ```
