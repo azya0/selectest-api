@@ -72,3 +72,9 @@ Added:
 finally:
     await client.aclose()
 ```
+
+## Wrong default type
+
+### 75 line of app.crud.vacancy.py
+
+```existing_ids = {} -> existing_ids = set()```

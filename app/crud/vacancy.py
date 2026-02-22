@@ -72,7 +72,7 @@ async def upsert_external_vacancies(
         )
         existing_ids = set(existing_result.scalars().all())
     else:
-        existing_ids = {}
+        existing_ids = set()
 
     created_count = 0
     for payload in payloads:
