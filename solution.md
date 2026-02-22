@@ -61,3 +61,14 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
 ```
+
+## HTTPX client was not close
+
+### 59 line of app.services.parser.py
+
+Added:
+
+```
+finally:
+    await client.aclose()
+```
